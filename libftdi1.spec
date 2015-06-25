@@ -1,3 +1,4 @@
+#
 # Conditional build:
 %bcond_with	py3	# using python3 scripting
 
@@ -8,9 +9,9 @@ Version:	1.2
 Release:	1
 License:	LGPL v2
 Group:		Libraries
-Source0:	http://www.intra2net.com/en/developer/libftdi1/download/%{name}-%{version}.tar.bz2
+Source0:	http://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
 # Source0-md5:	89dff802d89c4c0d55d8b4665fd52d0b
-URL:		http://www.intra2net.com/en/developer/libftdi1/
+URL:		http://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	doxygen
 BuildRequires:	libconfuse-devel
