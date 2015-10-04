@@ -1,30 +1,28 @@
 #
 # Conditional build:
-%bcond_with	py3	# using python3 scripting
+%bcond_without	python2		# Python 2 module
+%bcond_without	python3		# Python 3 module
 
 Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
 Version:	1.2
-Release:	1
+Release:	2
 License:	LGPL v2
 Group:		Libraries
 Source0:	http://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
 # Source0-md5:	89dff802d89c4c0d55d8b4665fd52d0b
+Patch0:		%{name}-python.patch
 URL:		http://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	doxygen
 BuildRequires:	libconfuse-devel
 BuildRequires:	libusb-devel >= 1.0.0
 BuildRequires:	pkgconfig
-%if %{with py3}
-BuildRequires:	python3-devel >= 3.3
-%else
-BuildRequires:	python-devel >= 2.6
-%endif
+%{?with_python2:BuildRequires:	python-devel >= 1:2.6}
+%{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
 BuildRequires:	rpmbuild(macros) >= 1.600
 BuildRequires:	swig-python
-BuildRequires:	swig-python >= 2.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -105,7 +103,7 @@ Plik nagłówkowy biblioteki libftdipp1.
 %package c++-static
 Summary:	Static libftdipp1 library
 Summary(pl.UTF-8):	Statyczna biblioteka libftdipp1
-License:	LGPL
+License:	GPL v2 with linking exception
 Group:		Development/Libraries
 Requires:	%{name}-c++-devel = %{version}-%{release}
 
@@ -116,47 +114,71 @@ Static libftdipp1 library.
 Statyczna biblioteka libftdipp1.
 
 %package -n python-libftdi1
-Summary:	Python binding for libftdi1
-Summary(pl.UTF-8):	Wiązanie Pythona do libftdi1
+Summary:	Python 2 binding for libftdi1
+Summary(pl.UTF-8):	Wiązanie Pythona 2 do libftdi1
 Group:		Libraries/Python
 Requires:	%{name} = %{version}-%{release}
 
 %description -n python-libftdi1
-Python binding for libftdi1.
+Python 2 binding for libftdi1.
 
 %description -n python-libftdi1 -l pl.UTF-8
-Wiązanie Pythona do libftdi1.
+Wiązanie Pythona 2 do libftdi1.
+
+%package -n python3-libftdi1
+Summary:	Python 3 binding for libftdi1
+Summary(pl.UTF-8):	Wiązanie Pythona 3 do libftdi1
+Group:		Libraries/Python
+Requires:	%{name} = %{version}-%{release}
+
+%description -n python3-libftdi1
+Python 3 binding for libftdi1.
+
+%description -n python3-libftdi1 -l pl.UTF-8
+Wiązanie Pythona 3 do libftdi1.
 
 %prep
 %setup -q
-%if %{with py3}
-sed -i -r "s#(find_package\s+\(\s+PythonLibs)(\s+\))#\1 3.3\2#g"  \
-%else
-sed -i -r "s#(find_package\s+\(\s+PythonLibs)(\s+\))#\1 2.6\2#g"  \
-%endif
-	python/CMakeLists.txt
+%patch0 -p1
 
 %build
-install -d build
-cd build
-%cmake \
-%if %{with py3}
-	-DPYTHON_EXECUTABLE=%{__python}3 \
-%else
-	-DPYTHON_EXECUTABLE=%{__python}2 \
-%endif
-	-DPYTHON_SITE_PACKAGE_PATH=%{py_sitescriptdir} \
+%if %{with python2}
+install -d build-py2
+cd build-py2
+%cmake .. \
 	-DEXAMPLES=OFF \
-	..
+	-DPYTHON_EXECUTABLE=%{__python}
 %{__make}
+cd ..
+%endif
+
+%if %{with python3}
+install -d build-py3
+cd build-py3
+%cmake .. \
+	-DEXAMPLES=OFF \
+	-DPYTHON_EXECUTABLE=%{__python3}
+%{__make}
+cd ..
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__rm} -rf $RPM_BUILD_ROOT
-%{__make} -C build install \
+
+%if %{with python3}
+%{__make} -C build-py3 install \
 	DESTDIR="$RPM_BUILD_ROOT"
-##%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
-##%py__postclean#
+%py3_comp $RPM_BUILD_ROOT%{py3_sitedir}
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}
+%endif
+
+%if %{with python2}
+%{__make} -C build-py2 install \
+	DESTDIR="$RPM_BUILD_ROOT"
+%py_comp $RPM_BUILD_ROOT%{py_sitedir}
+%py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
+%py_postclean
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -169,7 +191,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README build/doc/html build/doc/man
+%doc AUTHORS ChangeLog LICENSE README %{?with_python2:build-py2}%{!?with_python2:build-py3}/doc/html
 %attr(755,root,root) %{_libdir}/libftdi1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libftdi1.so.2
 
@@ -181,7 +203,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_includedir}/libftdi1
 %{_includedir}/libftdi1/ftdi.h
 %{_pkgconfigdir}/libftdi1.pc
-%dir %{_libdir}/cmake/libftdi1/
+%dir %{_libdir}/cmake/libftdi1
 %{_libdir}/cmake/libftdi1/*.cmake
 %dir %{_datadir}/libftdi
 %dir %{_datadir}/libftdi/examples
@@ -206,7 +228,17 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libftdipp1.a
 
+%if %{with python2}
 %files -n python-libftdi1
 %defattr(644,root,root,755)
 %attr(755,root,root) %{py_sitedir}/_ftdi1.so
-%{py_sitedir}/ftdi1.py*
+%{py_sitedir}/ftdi1.py[co]
+%endif
+
+%if %{with python3}
+%files -n python3-libftdi1
+%defattr(644,root,root,755)
+%attr(755,root,root) %{py3_sitedir}/_ftdi1.so
+%{py3_sitedir}/ftdi1.py
+%{py3_sitedir}/__pycache__/ftdi1.cpython-*.py[co]
+%endif
