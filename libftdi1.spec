@@ -10,6 +10,7 @@ Version:	1.2
 Release:	2
 License:	LGPL v2
 Group:		Libraries
+#Source0Download: http://www.intra2net.com/en/developer/libftdi/download.php
 Source0:	http://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
 # Source0-md5:	89dff802d89c4c0d55d8b4665fd52d0b
 Patch0:		%{name}-python.patch
