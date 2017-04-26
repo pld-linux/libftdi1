@@ -6,23 +6,25 @@
 Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
-Version:	1.2
-Release:	5
+Version:	1.3
+Release:	1
 License:	LGPL v2
 Group:		Libraries
-#Source0Download: http://www.intra2net.com/en/developer/libftdi/download.php
-Source0:	http://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
-# Source0-md5:	89dff802d89c4c0d55d8b4665fd52d0b
+#Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
+Source0:	https://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
+# Source0-md5:	156cdf40cece9f8a3ce1582db59a502a
 Patch0:		%{name}-python.patch
-URL:		http://www.intra2net.com/en/developer/libftdi/
+URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
+BuildRequires:	cmake >= 2.6
 BuildRequires:	doxygen
 BuildRequires:	libconfuse-devel
+BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel >= 1.0.0
 BuildRequires:	pkgconfig
 %{?with_python2:BuildRequires:	python-devel >= 1:2.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
-BuildRequires:	rpmbuild(macros) >= 1.600
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	swig-python
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
