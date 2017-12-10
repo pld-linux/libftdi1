@@ -6,13 +6,13 @@
 Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
-Version:	1.3
+Version:	1.4
 Release:	1
 License:	LGPL v2
 Group:		Libraries
 #Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
 Source0:	https://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
-# Source0-md5:	156cdf40cece9f8a3ce1582db59a502a
+# Source0-md5:	0c09fb2bb19a57c839fa6845c6c780a2
 Patch0:		%{name}-python.patch
 URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
@@ -219,7 +219,7 @@ rm -rf $RPM_BUILD_ROOT
 %files c++
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libftdipp1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libftdipp1.so.2
+%attr(755,root,root) %ghost %{_libdir}/libftdipp1.so.3
 
 %files c++-devel
 %defattr(644,root,root,755)
