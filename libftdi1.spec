@@ -7,7 +7,7 @@ Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
 Version:	1.4
-Release:	2
+Release:	3
 License:	LGPL v2
 Group:		Libraries
 #Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
@@ -145,11 +145,21 @@ Wiązanie Pythona 3 do libftdi1.
 %patch0 -p1
 
 %build
+install -d build-doc
+cd build-doc
+%cmake .. \
+	-DDOCUMENTATION:BOOL=ON \
+	-DEXAMPLES:BOOL=OFF \
+	-DPYTHON_BINDINGS:BOOL=OFF
+%{__make} docs
+cd ..
+
 %if %{with python2}
 install -d build-py2
 cd build-py2
 %cmake .. \
-	-DEXAMPLES=OFF \
+	-DDOCUMENTATION:BOOL=OFF \
+	-DEXAMPLES:BOOL=OFF \
 	-DPYTHON_EXECUTABLE=%{__python}
 %{__make}
 cd ..
@@ -159,7 +169,8 @@ cd ..
 install -d build-py3
 cd build-py3
 %cmake .. \
-	-DEXAMPLES=OFF \
+	-DDOCUMENTATION:BOOL=OFF \
+	-DEXAMPLES:BOOL=OFF \
 	-DPYTHON_EXECUTABLE=%{__python3}
 %{__make}
 cd ..
@@ -194,7 +205,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README %{?with_python2:build-py2}%{!?with_python2:build-py3}/doc/html
+%doc AUTHORS ChangeLog LICENSE README build-doc/doc/html
 %attr(755,root,root) %{_libdir}/libftdi1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libftdi1.so.2
 
