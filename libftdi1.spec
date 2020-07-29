@@ -6,14 +6,13 @@
 Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
-Version:	1.4
-Release:	4
+Version:	1.5
+Release:	1
 License:	LGPL v2
 Group:		Libraries
 #Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
 Source0:	https://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
-# Source0-md5:	0c09fb2bb19a57c839fa6845c6c780a2
-Patch0:		%{name}-python.patch
+# Source0-md5:	f515d7d69170a9afc8b273e8f1466a80
 URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	cmake >= 2.6
@@ -142,7 +141,6 @@ Wiązanie Pythona 3 do libftdi1.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 install -d build-doc
@@ -160,6 +158,8 @@ cd build-py2
 %cmake .. \
 	-DDOCUMENTATION:BOOL=OFF \
 	-DEXAMPLES:BOOL=OFF \
+	-DFTDIPP:BOOL=ON \
+	-DPYTHON_BINDINGS:BOOL=ON \
 	-DPYTHON_EXECUTABLE=%{__python}
 %{__make}
 cd ..
@@ -171,6 +171,7 @@ cd build-py3
 %cmake .. \
 	-DDOCUMENTATION:BOOL=OFF \
 	-DEXAMPLES:BOOL=OFF \
+	-DPYTHON_BINDINGS:BOOL=ON \
 	-DPYTHON_EXECUTABLE=%{__python3}
 %{__make}
 cd ..
@@ -194,6 +195,9 @@ rm -rf $RPM_BUILD_ROOT
 %py_postclean
 %endif
 
+# packaged as %doc
+%{__rm} $RPM_BUILD_ROOT%{_docdir}/example.conf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -205,7 +209,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README build-doc/doc/html
+%doc AUTHORS ChangeLog LICENSE README build-doc/doc/html ftdi_eeprom/example.conf
 %attr(755,root,root) %{_libdir}/libftdi1.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libftdi1.so.2
 
@@ -214,8 +218,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/ftdi_eeprom
 %attr(755,root,root) %{_bindir}/libftdi1-config
 %attr(755,root,root) %{_libdir}/libftdi1.so
-%dir %{_includedir}/libftdi1
-%{_includedir}/libftdi1/ftdi.h
+%{_includedir}/libftdi1
 %{_pkgconfigdir}/libftdi1.pc
 %dir %{_libdir}/cmake/libftdi1
 %{_libdir}/cmake/libftdi1/*.cmake
@@ -235,7 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 %files c++-devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libftdipp1.so
-%{_includedir}/libftdi1/ftdi.hpp
+%{_includedir}/libftdipp1
 %{_pkgconfigdir}/libftdipp1.pc
 
 %files c++-static
