@@ -7,12 +7,13 @@ Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
 Version:	1.5
-Release:	1
+Release:	2
 License:	LGPL v2
 Group:		Libraries
 #Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
 Source0:	https://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
 # Source0-md5:	f515d7d69170a9afc8b273e8f1466a80
+Patch0:		%{name}-cmake.patch
 URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	cmake >= 2.6
@@ -141,6 +142,7 @@ Wiązanie Pythona 3 do libftdi1.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 install -d build-doc

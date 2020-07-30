@@ -1,0 +1,45 @@
+--- libftdi1-1.5/CMakeLists.txt.orig	2020-07-07 21:32:55.000000000 +0200
++++ libftdi1-1.5/CMakeLists.txt	2020-07-30 20:20:30.815434396 +0200
+@@ -136,7 +136,6 @@
+ 
+ add_subdirectory(src)
+ if ( FTDIPP )
+-  project(libftdipp1 C CXX)
+   add_subdirectory(ftdipp)
+ endif ()
+ if ( PYTHON_BINDINGS )
+@@ -157,6 +156,7 @@
+ set(prefix      ${CMAKE_INSTALL_PREFIX})
+ set(exec_prefix ${CMAKE_INSTALL_PREFIX}/bin)
+ set(includedir  ${CMAKE_INSTALL_PREFIX}/include/${PROJECT_NAME})
++set(ppincludedir ${CMAKE_INSTALL_PREFIX}/include/libftdipp1)
+ 
+ if(${UNIX})
+    set(libdir      ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+--- libftdi1-1.5/ftdipp/CMakeLists.txt.orig	2020-07-30 20:25:51.163698920 +0200
++++ libftdi1-1.5/ftdipp/CMakeLists.txt	2020-07-30 20:26:21.460201456 +0200
+@@ -1,4 +1,5 @@
+ # vim: ts=2:sw=2:sts=2
++project(libftdipp1 C CXX)
+ 
+ # Targets
+ set(cpp_sources ${CMAKE_CURRENT_SOURCE_DIR}/ftdi.cpp CACHE INTERNAL "List of cpp sources" )
+@@ -42,6 +43,6 @@
+ endif ()
+ 
+ install ( FILES ${cpp_headers}
+-					DESTINATION include/${PROJECT_NAME}
++					DESTINATION include/libftdipp1
+ 					COMPONENT headers
+ 				)
+--- libftdi1-1.5/libftdipp1.pc.in.orig	2020-07-07 21:32:55.000000000 +0200
++++ libftdi1-1.5/libftdipp1.pc.in	2020-07-30 20:50:23.035725105 +0200
+@@ -1,7 +1,7 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
+ libdir=@libdir@
+-includedir=@includedir@
++includedir=@ppincludedir@
+ 
+ Name: libftdipp1
+ Description: C++ wrapper for libftdi1
