@@ -160,7 +160,6 @@ cd build-py2
 %cmake .. \
 	-DDOCUMENTATION:BOOL=OFF \
 	-DEXAMPLES:BOOL=OFF \
-	-DFTDIPP:BOOL=ON \
 	-DPYTHON_BINDINGS:BOOL=ON \
 	-DPYTHON_EXECUTABLE=%{__python}
 %{__make}
@@ -173,6 +172,7 @@ cd build-py3
 %cmake .. \
 	-DDOCUMENTATION:BOOL=OFF \
 	-DEXAMPLES:BOOL=OFF \
+	-DFTDIPP:BOOL=ON \
 	-DPYTHON_BINDINGS:BOOL=ON \
 	-DPYTHON_EXECUTABLE=%{__python3}
 %{__make}
