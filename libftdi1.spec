@@ -14,6 +14,7 @@ Group:		Libraries
 Source0:	https://www.intra2net.com/en/developer/libftdi/download/%{name}-%{version}.tar.bz2
 # Source0-md5:	f515d7d69170a9afc8b273e8f1466a80
 Patch0:		%{name}-cmake.patch
+Patch1:		%{name}-swig4.3.patch
 URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	cmake >= 2.6
@@ -25,7 +26,7 @@ BuildRequires:	pkgconfig
 %{?with_python2:BuildRequires:	python-devel >= 1:2.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
 BuildRequires:	rpmbuild(macros) >= 1.605
-BuildRequires:	swig-python
+BuildRequires:	swig-python >= 2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -142,7 +143,8 @@ Wiązanie Pythona 3 do libftdi1.
 
 %prep
 %setup -q
-%patch -P 0 -p1
+%patch -P0 -p1
+%patch -P1 -p1
 
 %build
 install -d build-doc
