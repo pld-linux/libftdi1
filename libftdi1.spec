@@ -187,6 +187,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %{__make} -C build-py3 install \
 	DESTDIR="$RPM_BUILD_ROOT"
+
 %py3_comp $RPM_BUILD_ROOT%{py3_sitedir}
 %py3_ocomp $RPM_BUILD_ROOT%{py3_sitedir}
 %endif
@@ -194,6 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %{__make} -C build-py2 install \
 	DESTDIR="$RPM_BUILD_ROOT"
+
 %py_comp $RPM_BUILD_ROOT%{py_sitedir}
 %py_ocomp $RPM_BUILD_ROOT%{py_sitedir}
 %py_postclean
@@ -214,14 +216,14 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog LICENSE README build-doc/doc/html ftdi_eeprom/example.conf
-%attr(755,root,root) %{_libdir}/libftdi1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libftdi1.so.2
+%{_libdir}/libftdi1.so.*.*.*
+%ghost %{_libdir}/libftdi1.so.2
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/ftdi_eeprom
 %attr(755,root,root) %{_bindir}/libftdi1-config
-%attr(755,root,root) %{_libdir}/libftdi1.so
+%{_libdir}/libftdi1.so
 %{_includedir}/libftdi1
 %{_pkgconfigdir}/libftdi1.pc
 %dir %{_libdir}/cmake/libftdi1
@@ -236,12 +238,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files c++
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libftdipp1.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libftdipp1.so.3
+%{_libdir}/libftdipp1.so.*.*.*
+%ghost %{_libdir}/libftdipp1.so.3
 
 %files c++-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libftdipp1.so
+%{_libdir}/libftdipp1.so
 %{_includedir}/libftdipp1
 %{_pkgconfigdir}/libftdipp1.pc
 
@@ -252,14 +254,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files -n python-libftdi1
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py_sitedir}/_ftdi1.so
+%{py_sitedir}/_ftdi1.so
 %{py_sitedir}/ftdi1.py[co]
 %endif
 
 %if %{with python3}
 %files -n python3-libftdi1
 %defattr(644,root,root,755)
-%attr(755,root,root) %{py3_sitedir}/_ftdi1.so
+%{py3_sitedir}/_ftdi1.so
 %{py3_sitedir}/ftdi1.py
 %{py3_sitedir}/__pycache__/ftdi1.cpython-*.py[co]
 %endif
