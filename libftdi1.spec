@@ -1,5 +1,6 @@
 #
 # Conditional build:
+%bcond_without	apidocs		# Doxygen HTML documentation
 %bcond_without	python2		# Python 2 module
 %bcond_without	python3		# Python 3 module
 
@@ -18,13 +19,14 @@ Patch1:		%{name}-swig4.3.patch
 URL:		https://www.intra2net.com/en/developer/libftdi/
 BuildRequires:	boost-devel >= 1.33
 BuildRequires:	cmake >= 2.6
-BuildRequires:	doxygen
+%{?with_apidocs:BuildRequires:	doxygen}
 BuildRequires:	libconfuse-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libusb-devel >= 1.0.0
 BuildRequires:	pkgconfig
 %{?with_python2:BuildRequires:	python-devel >= 1:2.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.3}
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	swig-python >= 2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -117,6 +119,18 @@ Static libftdipp1 library.
 %description c++-static -l pl.UTF-8
 Statyczna biblioteka libftdipp1.
 
+%package apidocs
+Summary:	API documentation for libftdi1 libraries
+Summary(pl.UTF-8):	Dokumentacja API bibliotek libftdi1
+Group:		Documentation
+BuildArch:	noarch
+
+%description apidocs
+API documentation for libftdi1 libraries (C and C++).
+
+%description apidocs -l pl.UTF-8
+Dokumentacja API bibliotek libftdi1 (C oraz C++).
+
 %package -n python-libftdi1
 Summary:	Python 2 binding for libftdi1
 Summary(pl.UTF-8):	Wiązanie Pythona 2 do libftdi1
@@ -147,6 +161,7 @@ Wiązanie Pythona 3 do libftdi1.
 %patch -P1 -p1
 
 %build
+%if %{with apidocs}
 install -d build-doc
 cd build-doc
 %cmake .. \
@@ -155,6 +170,7 @@ cd build-doc
 	-DPYTHON_BINDINGS:BOOL=OFF
 %{__make} docs
 cd ..
+%endif
 
 %if %{with python2}
 install -d build-py2
@@ -215,7 +231,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog LICENSE README build-doc/doc/html ftdi_eeprom/example.conf
+%doc AUTHORS ChangeLog LICENSE README ftdi_eeprom/example.conf
 %{_libdir}/libftdi1.so.*.*.*
 %ghost %{_libdir}/libftdi1.so.2
 
@@ -250,6 +266,12 @@ rm -rf $RPM_BUILD_ROOT
 %files c++-static
 %defattr(644,root,root,755)
 %{_libdir}/libftdipp1.a
+
+%if %{with apidocs}
+%files apidocs
+%defattr(644,root,root,755)
+%doc build-doc/doc/html
+%endif
 
 %if %{with python2}
 %files -n python-libftdi1
