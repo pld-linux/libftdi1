@@ -8,7 +8,7 @@ Summary:	Library to talk to FTDI's chips including the popular bitbang mode
 Summary(pl.UTF-8):	Biblioteka do komunikacji z układami FTDI włącznie z trybem bitbang
 Name:		libftdi1
 Version:	1.5
-Release:	6
+Release:	7
 License:	LGPL v2
 Group:		Libraries
 #Source0Download: https://www.intra2net.com/en/developer/libftdi/download.php
